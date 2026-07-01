@@ -258,7 +258,7 @@
     <!-- Основная работа -->
     <div class="section">
         <label for="workSelect">Основная работа</label>
-        <select id="workSelect">
+        <select id="workSelect" onchange="calculate()">
             <option value="kompleks_shinki" selected>Комплекс шинки (стандарт)</option>
             <option value="kompleks_runflat">Комплекс Runflat</option>
             <option value="montazh_balans">Монтаж / баланс</option>
@@ -326,7 +326,6 @@
 </div>
 
 <script>
-    // База данных цен на основе прайс-листа
     const priceData = {
         'R15': {
             demontazh_rezi: { set: 800, single: 200 },
@@ -401,7 +400,6 @@
     let selectedSize = 'R16';
     let selectedCarType = 'sedan';
 
-    // Рендерим сетку размеров
     const sizeGrid = document.getElementById('sizeGrid');
     Object.keys(priceData).forEach(size => {
         const btn = document.createElement('div');
@@ -425,7 +423,6 @@
             btn.classList.toggle('active', btn.textContent.toLowerCase().includes(type === 'sedan' ? 'седан' : 'кроссовер'));
         });
         
-        // Обновляем визуальные цены в чекбоксах
         document.getElementById('labelPerekidka').textContent = formatPrice(flatPrices.perekidka[type]) + ' ₽';
         document.getElementById('labelVyveshivanie').textContent = formatPrice(flatPrices.vyveshivanie[type]) + ' ₽';
         
@@ -441,7 +438,6 @@
         calculate();
     }
 
-    // Вспомогательная функция форматирования чисел
     function formatPrice(num) {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     }
@@ -452,20 +448,13 @@
         
         let workCost = 0;
         
-        // Расчет стоимости основных работ
         if (workType !== 'none') {
             const prices = priceData[selectedSize][workType];
-            
-            // Количество полных комплектов (по 4 штуки)
             const setsOfFour = Math.floor(qty / 4);
             const remainingWheels = qty % 4;
-            
-            // Итоговая математика расчета:
-            // Сумма за полные комплекты + сумма за оставшиеся поштучно
             workCost = (setsOfFour * prices.set) + (remainingWheels * prices.single);
         }
 
-        // Расчет дополнительных услуг
         let addonsCost = 0;
         if (document.getElementById('chkPerekidka').checked) {
             addonsCost += flatPrices.perekidka[selectedCarType];
@@ -476,13 +465,11 @@
 
         const totalCost = workCost + addonsCost;
 
-        // Вывод на экран
         document.getElementById('resWork').textContent = formatPrice(workCost) + ' ₽';
         document.getElementById('resAddons').textContent = formatPrice(addonsCost) + ' ₽';
         document.getElementById('resTotal').textContent = formatPrice(totalCost) + ' ₽';
     }
 
-    // Начальный запуск
     setCarType('sedan');
 </script>
 
