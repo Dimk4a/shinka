@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор Шиномонтажа</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-main: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .calculator {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 24px;
+            text-align: center;
+            font-size: 24px;
+            color: var(--text-main);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-main);
+        }
+
+        /* Стиль для выбора размера колеса */
+        .size-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 8px;
+        }
+
+        .size-btn {
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 0;
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .size-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .size-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        select, input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            background-color: #f8fafc;
+            color: var(--text-main);
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        select:focus, input[type="number"]:focus {
+            border-color: var(--primary);
+        }
+
+        /* Количество колес */
+        .qty-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .qty-btn {
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            width: 44px;
+            height: 44px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .qty-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .qty-input {
+            width: 60px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 10px 0;
+        }
+
+        /* Переключатели кузова */
+        .car-type-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .car-type-btn {
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .car-type-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        /* Чекбоксы доп. услуг */
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            background: #f8fafc;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .checkbox-item:hover {
+            background: #f1f5f9;
+        }
+
+        .checkbox-item input {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-info {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-size: 15px;
+        }
+
+        .price-tag {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Результат */
+        .result-container {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .result-row.total {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed #bfdbfe;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .result-row.total .price {
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator">
+    <h2>Калькулятор шиномонтажа</h2>
+
+    <!-- Выбор диаметра -->
+    <div class="section">
+        <label>Диаметр диска (R)</label>
+        <div class="size-grid" id="sizeGrid">
+            <!-- Кнопки сгенерируются через JS -->
+        </div>
+    </div>
+
+    <!-- Основная работа -->
+    <div class="section">
+        <label for="workSelect">Основная работа</label>
+        <select id="workSelect">
+            <option value="kompleks_shinki" selected>Комплекс шинки (стандарт)</option>
+            <option value="kompleks_runflat">Комплекс Runflat</option>
+            <option value="montazh_balans">Монтаж / баланс</option>
+            <option value="demontazh_rezi">Демонтаж резины</option>
+            <option value="demontazh_runflat">Демонтаж Runflat</option>
+            <option value="none">Без основной работы</option>
+        </select>
+    </div>
+
+    <!-- Количество колес -->
+    <div class="section">
+        <label>Количество колёс</label>
+        <div class="qty-container">
+            <button class="qty-btn" onclick="changeQty(-1)">−</button>
+            <input type="number" id="wheelQty" class="qty-input" value="4" min="1" max="20" readonly>
+            <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+    </div>
+
+    <!-- Тип кузова для доп. услуг -->
+    <div class="section">
+        <label>Тип автомобиля (для доп. услуг)</label>
+        <div class="car-type-container">
+            <div class="car-type-btn active" onclick="setCarType('sedan')">Седан</div>
+            <div class="car-type-btn" onclick="setCarType('crossover')">Кроссовер</div>
+        </div>
+    </div>
+
+    <!-- Дополнительные услуги -->
+    <div class="section">
+        <label>Дополнительные услуги</label>
+        <div class="checkbox-group">
+            <label class="checkbox-item">
+                <input type="checkbox" id="chkPerekidka" onchange="calculate()">
+                <div class="checkbox-info">
+                    <span>Перекидка колёс</span>
+                    <span class="price-tag" id="labelPerekidka">1 500 ₽</span>
+                </div>
+            </label>
+            <label class="checkbox-item">
+                <input type="checkbox" id="chkVyveshivanie" onchange="calculate()">
+                <div class="checkbox-info">
+                    <span>Вывешивание</span>
+                    <span class="price-tag" id="labelVyveshivanie">3 500 ₽</span>
+                </div>
+            </label>
+        </div>
+    </div>
+
+    <!-- Итоговый блок -->
+    <div class="result-container">
+        <div class="result-row">
+            <span>Основные работы:</span>
+            <span id="resWork">0 ₽</span>
+        </div>
+        <div class="result-row">
+            <span>Дополнительные услуги:</span>
+            <span id="resAddons">0 ₽</span>
+        </div>
+        <div class="result-row total">
+            <span>Итого к оплате:</span>
+            <span class="price" id="resTotal">0 ₽</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // База данных цен на основе прайс-листа
+    const priceData = {
+        'R15': {
+            demontazh_rezi: { set: 800, single: 200 },
+            demontazh_runflat: { set: 850, single: 250 },
+            montazh_balans: { set: 1500, single: 400 },
+            kompleks_shinki: { set: 3000, single: 800 },
+            kompleks_runflat: { set: 3000, single: 750 }
+        },
+        'R16': {
+            demontazh_rezi: { set: 800, single: 200 },
+            demontazh_runflat: { set: 1500, single: 400 },
+            montazh_balans: { set: 2000, single: 500 },
+            kompleks_shinki: { set: 3500, single: 900 },
+            kompleks_runflat: { set: 4000, single: 1000 }
+        },
+        'R17': {
+            demontazh_rezi: { set: 1100, single: 300 },
+            demontazh_runflat: { set: 1750, single: 500 },
+            montazh_balans: { set: 2500, single: 700 },
+            kompleks_shinki: { set: 4000, single: 1000 },
+            kompleks_runflat: { set: 5000, single: 1250 }
+        },
+        'R18': {
+            demontazh_rezi: { set: 1200, single: 400 },
+            demontazh_runflat: { set: 2000, single: 500 },
+            montazh_balans: { set: 3000, single: 800 },
+            kompleks_shinki: { set: 4500, single: 1200 },
+            kompleks_runflat: { set: 5500, single: 1375 }
+        },
+        'R19': {
+            demontazh_rezi: { set: 1700, single: 450 },
+            demontazh_runflat: { set: 2500, single: 700 },
+            montazh_balans: { set: 3500, single: 900 },
+            kompleks_shinki: { set: 5000, single: 1300 },
+            kompleks_runflat: { set: 7000, single: 1750 }
+        },
+        'R20': {
+            demontazh_rezi: { set: 2000, single: 500 },
+            demontazh_runflat: { set: 3000, single: 750 },
+            montazh_balans: { set: 4000, single: 1000 },
+            kompleks_shinki: { set: 5500, single: 1400 },
+            kompleks_runflat: { set: 7500, single: 1875 }
+        },
+        'R21': {
+            demontazh_rezi: { set: 2000, single: 500 },
+            demontazh_runflat: { set: 3000, single: 750 },
+            montazh_balans: { set: 4500, single: 1200 },
+            kompleks_shinki: { set: 6000, single: 1500 },
+            kompleks_runflat: { set: 8000, single: 2000 }
+        },
+        'R22': {
+            demontazh_rezi: { set: 2500, single: 700 },
+            demontazh_runflat: { set: 3500, single: 900 },
+            montazh_balans: { set: 5000, single: 1300 },
+            kompleks_shinki: { set: 7000, single: 1750 },
+            kompleks_runflat: { set: 8500, single: 2125 }
+        },
+        'R23': {
+            demontazh_rezi: { set: 2500, single: 700 },
+            demontazh_runflat: { set: 3500, single: 900 },
+            montazh_balans: { set: 6000, single: 1500 },
+            kompleks_shinki: { set: 8000, single: 2000 },
+            kompleks_runflat: { set: 9500, single: 2375 }
+        }
+    };
+
+    const flatPrices = {
+        perekidka: { sedan: 1500, crossover: 2000 },
+        vyveshivanie: { sedan: 3500, crossover: 4000 }
+    };
+
+    let selectedSize = 'R16';
+    let selectedCarType = 'sedan';
+
+    // Рендерим сетку размеров
+    const sizeGrid = document.getElementById('sizeGrid');
+    Object.keys(priceData).forEach(size => {
+        const btn = document.createElement('div');
+        btn.className = `size-btn ${size === selectedSize ? 'active' : ''}`;
+        btn.textContent = size;
+        btn.onclick = () => selectSize(size);
+        sizeGrid.appendChild(btn);
+    });
+
+    function selectSize(size) {
+        selectedSize = size;
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent === size);
+        });
+        calculate();
+    }
+
+    function setCarType(type) {
+        selectedCarType = type;
+        document.querySelectorAll('.car-type-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent.toLowerCase().includes(type === 'sedan' ? 'седан' : 'кроссовер'));
+        });
+        
+        // Обновляем визуальные цены в чекбоксах
+        document.getElementById('labelPerekidka').textContent = formatPrice(flatPrices.perekidka[type]) + ' ₽';
+        document.getElementById('labelVyveshivanie').textContent = formatPrice(flatPrices.vyveshivanie[type]) + ' ₽';
+        
+        calculate();
+    }
+
+    function changeQty(amount) {
+        const qtyInput = document.getElementById('wheelQty');
+        let val = parseInt(qtyInput.value) + amount;
+        if (val < 1) val = 1;
+        if (val > 20) val = 20;
+        qtyInput.value = val;
+        calculate();
+    }
+
+    // Вспомогательная функция форматирования чисел
+    function formatPrice(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    }
+
+    function calculate() {
+        const qty = parseInt(document.getElementById('wheelQty').value);
+        const workType = document.getElementById('workSelect').value;
+        
+        let workCost = 0;
+        
+        // Расчет стоимости основных работ
+        if (workType !== 'none') {
+            const prices = priceData[selectedSize][workType];
+            
+            // Количество полных комплектов (по 4 штуки)
+            const setsOfFour = Math.floor(qty / 4);
+            const remainingWheels = qty % 4;
+            
+            // Итоговая математика расчета:
+            // Сумма за полные комплекты + сумма за оставшиеся поштучно
+            workCost = (setsOfFour * prices.set) + (remainingWheels * prices.single);
+        }
+
+        // Расчет дополнительных услуг
+        let addonsCost = 0;
+        if (document.getElementById('chkPerekidka').checked) {
+            addonsCost += flatPrices.perekidka[selectedCarType];
+        }
+        if (document.getElementById('chkVyveshivanie').checked) {
+            addonsCost += flatPrices.vyveshivanie[selectedCarType];
+        }
+
+        const totalCost = workCost + addonsCost;
+
+        // Вывод на экран
+        document.getElementById('resWork').textContent = formatPrice(workCost) + ' ₽';
+        document.getElementById('resAddons').textContent = formatPrice(addonsCost) + ' ₽';
+        document.getElementById('resTotal').textContent = formatPrice(totalCost) + ' ₽';
+    }
+
+    // Начальный запуск
+    setCarType('sedan');
+</script>
+
+</body>
+</html>
