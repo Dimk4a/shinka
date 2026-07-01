@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор Шиномонтажа</title>
+    <title>Калькулятор цены покраски и услуг шиномонтажа</title>
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --bg-main: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --bg-main: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --accent: #f59e0b;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-main);
             color: var(--text-main);
             margin: 0;
@@ -25,30 +26,31 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            box-sizing: border-box;
         }
 
         .calculator {
             background-color: var(--card-bg);
             border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
             width: 100%;
-            max-width: 600px;
-            padding: 30px;
+            max-width: 650px;
+            padding: 25px;
             box-sizing: border-box;
         }
 
         h2 {
             margin-top: 0;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             text-align: center;
-            font-size: 24px;
+            font-size: 22px;
             color: var(--text-main);
-            border-bottom: 2px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
             padding-bottom: 15px;
         }
 
         .section {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         label {
@@ -56,18 +58,18 @@
             font-weight: 600;
             margin-bottom: 8px;
             font-size: 14px;
-            color: var(--text-main);
+            color: var(--text-muted);
         }
 
-        /* Стиль для выбора размера колеса */
+        /* Выбор размера колеса */
         .size-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-            gap: 8px;
+            grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
+            gap: 6px;
         }
 
         .size-btn {
-            background: #f1f5f9;
+            background: #1e293b;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 10px 0;
@@ -75,10 +77,11 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
+            color: var(--text-main);
         }
 
         .size-btn:hover {
-            background: #e2e8f0;
+            background: #334155;
         }
 
         .size-btn.active {
@@ -93,7 +96,7 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 15px;
-            background-color: #f8fafc;
+            background-color: #0f172a;
             color: var(--text-main);
             outline: none;
             box-sizing: border-box;
@@ -112,13 +115,14 @@
         }
 
         .qty-btn {
-            background: #f1f5f9;
+            background: #334155;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             width: 44px;
             height: 44px;
             font-size: 20px;
             font-weight: bold;
+            color: white;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -127,7 +131,7 @@
         }
 
         .qty-btn:hover {
-            background: #e2e8f0;
+            background: #475569;
         }
 
         .qty-input {
@@ -138,18 +142,60 @@
             padding: 10px 0;
         }
 
-        /* Переключатели кузова */
+        /* Сервисные панели */
+        .service-card {
+            background: #111827;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+        }
+
+        .service-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .service-header input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            accent-color: var(--primary);
+        }
+
+        .service-title {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .service-body {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .service-body.active {
+            display: block;
+        }
+
+        /* Тип кузова */
         .car-type-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
         }
 
         .car-type-btn {
-            background: #f1f5f9;
+            background: #1e293b;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 12px;
+            padding: 10px;
             text-align: center;
             font-weight: 600;
             cursor: pointer;
@@ -162,55 +208,33 @@
             border-color: var(--primary);
         }
 
-        /* Чекбоксы доп. услуг */
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            background: #f8fafc;
-            padding: 12px 16px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            cursor: pointer;
-            user-select: none;
-            transition: background 0.2s;
-        }
-
-        .checkbox-item:hover {
-            background: #f1f5f9;
-        }
-
-        .checkbox-item input {
-            margin-right: 12px;
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .checkbox-info {
+        /* Блок детализации (чека) */
+        .detail-item {
             display: flex;
             justify-content: space-between;
-            width: 100%;
-            font-size: 15px;
+            align-items: flex-start;
+            font-size: 14px;
+            color: #cbd5e1;
+            line-height: 1.5;
+            padding: 8px 0;
+            border-bottom: 1px solid #334155;
         }
 
-        .price-tag {
-            font-weight: 600;
-            color: var(--primary);
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-item span:first-child {
+            padding-right: 15px;
         }
 
         /* Результат */
         .result-container {
-            background-color: #eff6ff;
-            border: 1px solid #bfdbfe;
+            background-color: #1e3a8a;
+            border: 1px solid #3b82f6;
             border-radius: 12px;
             padding: 20px;
-            margin-top: 25px;
+            margin-top: 20px;
         }
 
         .result-row {
@@ -218,21 +242,31 @@
             justify-content: space-between;
             margin-bottom: 8px;
             font-size: 14px;
-            color: var(--text-muted);
+            color: #93c5fd;
         }
 
         .result-row.total {
             margin-top: 12px;
             padding-top: 12px;
-            border-top: 1px dashed #bfdbfe;
+            border-top: 1px dashed #3b82f6;
             font-size: 20px;
             font-weight: 700;
             color: var(--text-main);
         }
 
         .result-row.total .price {
-            color: var(--primary);
+            color: #fca5a5;
             font-size: 24px;
+        }
+
+        /* Инпут для димета */
+        .dimet-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .dimet-input-group input {
+            max-width: 100px;
         }
 
         input::-webkit-outer-spin-button,
@@ -245,7 +279,7 @@
 <body>
 
 <div class="calculator">
-    <h2>Калькулятор шиномонтажа</h2>
+    <h2>Калькулятор шиномонтажа и ремонта</h2>
 
     <!-- Выбор диаметра -->
     <div class="section">
@@ -255,22 +289,9 @@
         </div>
     </div>
 
-    <!-- Основная работа -->
-    <div class="section">
-        <label for="workSelect">Основная работа</label>
-        <select id="workSelect" onchange="calculate()">
-            <option value="kompleks_shinki" selected>Комплекс шинки (стандарт)</option>
-            <option value="kompleks_runflat">Комплекс Runflat</option>
-            <option value="montazh_balans">Монтаж / баланс</option>
-            <option value="demontazh_rezi">Демонтаж резины</option>
-            <option value="demontazh_runflat">Демонтаж Runflat</option>
-            <option value="none">Без основной работы</option>
-        </select>
-    </div>
-
     <!-- Количество колес -->
     <div class="section">
-        <label>Количество колёс</label>
+        <label>Количество колёс (для шиномонтажа/покраски)</label>
         <div class="qty-container">
             <button class="qty-btn" onclick="changeQty(-1)">−</button>
             <input type="number" id="wheelQty" class="qty-input" value="4" min="1" max="20" readonly>
@@ -278,44 +299,163 @@
         </div>
     </div>
 
-    <!-- Тип кузова для доп. услуг -->
+    <!-- ТИП КУЗОВА (для вывешивания и перекидки) -->
     <div class="section">
-        <label>Тип автомобиля (для доп. услуг)</label>
+        <label>Тип кузова автомобиля</label>
         <div class="car-type-container">
             <div class="car-type-btn active" onclick="setCarType('sedan')">Седан</div>
             <div class="car-type-btn" onclick="setCarType('crossover')">Кроссовер</div>
         </div>
     </div>
 
-    <!-- Дополнительные услуги -->
-    <div class="section">
-        <label>Дополнительные услуги</label>
-        <div class="checkbox-group">
-            <label class="checkbox-item">
-                <input type="checkbox" id="chkPerekidka" onchange="calculate()">
-                <div class="checkbox-info">
-                    <span>Перекидка колёс</span>
-                    <span class="price-tag" id="labelPerekidka">1 500 ₽</span>
+    <!-- РАЗДЕЛ 1: ШИНОМОНТАЖ -->
+    <div class="service-card">
+        <div class="service-header" onclick="toggleService('shinka')">
+            <div class="service-title">
+                <input type="checkbox" id="useShinka" checked onclick="event.stopPropagation(); calculate();">
+                <span>Шиномонтажные работы</span>
+            </div>
+            <span id="arrow-shinka">▼</span>
+        </div>
+        <div class="service-body active" id="body-shinka">
+            <label for="workSelect">Выберите услугу</label>
+            <select id="workSelect" onchange="calculate()">
+                <option value="kompleks_shinki" selected>Комплекс шинки (стандарт)</option>
+                <option value="kompleks_runflat">Комплекс Runflat</option>
+                <option value="montazh_balans">Монтаж / баланс</option>
+                <option value="demontazh_rezi">Демонтаж резины</option>
+                <option value="demontazh_runflat">Демонтаж Runflat</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- РАЗДЕЛ 2: ПОКРАСКА -->
+    <div class="service-card">
+        <div class="service-header" onclick="toggleService('paint')">
+            <div class="service-title">
+                <input type="checkbox" id="usePaint" onclick="event.stopPropagation(); calculate();">
+                <span>Покраска дисков (порошок)</span>
+            </div>
+            <span id="arrow-paint">▶</span>
+        </div>
+        <div class="service-body" id="body-paint">
+            <label for="paintType">Тип покраски</label>
+            <select id="paintType" onchange="calculate()">
+                <option value="std">Стандартная покраска</option>
+                <option value="chrome">Покраска в Алюмохром</option>
+            </select>
+            <div style="margin-top: 10px; font-size: 12px; color: var(--text-muted);">
+                Расчет от комплекта: 1 диск - 40%, 2 диска - 60%, 3 диска - 80%, 4 диска - 100%.
+            </div>
+        </div>
+    </div>
+
+    <!-- РАЗДЕЛ 3: АЛМАЗНАЯ ПРОТОЧКА -->
+    <div class="service-card">
+        <div class="service-header" onclick="toggleService('protochka')">
+            <div class="service-title">
+                <input type="checkbox" id="useProtochka" onclick="event.stopPropagation(); calculate();">
+                <span>Алмазная проточка</span>
+            </div>
+            <span id="arrow-protochka">▶</span>
+        </div>
+        <div class="service-body" id="body-protochka">
+            <label for="protochkaType">Конфигурация комплекта</label>
+            <select id="protochkaType" onchange="calculate()">
+                <option value="odnoshir">Одноширокие диски</option>
+                <option value="raznoshir">Разноширокие диски</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- РАЗДЕЛ 4: ПРАВКА ДИСКОВ -->
+    <div class="service-card">
+        <div class="service-header" onclick="toggleService('pravka')">
+            <div class="service-title">
+                <input type="checkbox" id="usePravka" onclick="event.stopPropagation(); calculate();">
+                <span>Правка дисков</span>
+            </div>
+            <span id="arrow-pravka">▶</span>
+        </div>
+        <div class="service-body" id="body-pravka">
+            <div style="display: flex; gap: 15px; margin-bottom: 10px;">
+                <div style="flex: 1;">
+                    <label>Кол-во кривых дисков</label>
+                    <input type="number" id="pravkaQty" value="1" min="1" max="4" onchange="calculate()">
                 </div>
-            </label>
-            <label class="checkbox-item">
-                <input type="checkbox" id="chkVyveshivanie" onchange="calculate()">
-                <div class="checkbox-info">
-                    <span>Вывешивание</span>
-                    <span class="price-tag" id="labelVyveshivanie">3 500 ₽</span>
+                <div style="flex: 1;">
+                    <label>Степень сложности</label>
+                    <select id="pravkaType" onchange="calculate()">
+                        <option value="lite">Лайт</option>
+                        <option value="hard">Сложная (Пиздец)</option>
+                    </select>
                 </div>
-            </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- РАЗДЕЛ 5: ДИМЕТ -->
+    <div class="service-card">
+        <div class="service-header" onclick="toggleService('dimet')">
+            <div class="service-title">
+                <input type="checkbox" id="useDimet" onclick="event.stopPropagation(); calculate();">
+                <span>Напыление Димет</span>
+            </div>
+            <span id="arrow-dimet">▶</span>
+        </div>
+        <div class="service-body" id="body-dimet">
+            <div class="dimet-input-group">
+                <label style="margin-bottom: 0;">Повреждение (в см):</label>
+                <input type="number" id="dimetLength" value="1" min="1" max="100" oninput="calculate()">
+                <span>см (по 350 ₽/см)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- РАЗДЕЛ 6: ДОПОЛНИТЕЛЬНЫЕ ОПЦИИ -->
+    <div class="service-card">
+        <div class="service-header" onclick="toggleService('addons')">
+            <div class="service-title">
+                <span>Перекидка и вывешивание</span>
+            </div>
+            <span id="arrow-addons">▶</span>
+        </div>
+        <div class="service-body" id="body-addons">
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <label style="display: flex; align-items: center; cursor: pointer; user-select: none;">
+                    <input type="checkbox" id="chkPerekidka" onchange="calculate()" style="width: 18px; height: 18px; margin-right: 8px;">
+                    <span>Перекидка колёс (+<span id="perekidkaPriceText">1 500</span> ₽)</span>
+                </label>
+                <label style="display: flex; align-items: center; cursor: pointer; user-select: none;">
+                    <input type="checkbox" id="chkVyveshivanie" onchange="calculate()" style="width: 18px; height: 18px; margin-right: 8px;">
+                    <span>Вывешивание (+<span id="vyveshivaniePriceText">3 500</span> ₽)</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- ПОДРОБНАЯ ДЕТАЛИЗАЦИЯ (Динамический чек) -->
+    <div class="service-card" id="receiptCard" style="display: none; background: #1e293b; border-color: #475569;">
+        <div style="font-weight: 700; font-size: 16px; margin-bottom: 12px; color: var(--accent); border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
+            Детализация выполненных работ
+        </div>
+        <div id="breakdownList" style="display: flex; flex-direction: column; gap: 4px;">
+            <!-- Сюда JS вставит строки работ -->
         </div>
     </div>
 
     <!-- Итоговый блок -->
     <div class="result-container">
         <div class="result-row">
-            <span>Основные работы:</span>
-            <span id="resWork">0 ₽</span>
+            <span>Шиномонтаж:</span>
+            <span id="resShinka">0 ₽</span>
         </div>
         <div class="result-row">
-            <span>Дополнительные услуги:</span>
+            <span>Ремонт и покраска дисков:</span>
+            <span id="resRepair">0 ₽</span>
+        </div>
+        <div class="result-row">
+            <span>Доп. услуги:</span>
             <span id="resAddons">0 ₽</span>
         </div>
         <div class="result-row total">
@@ -327,69 +467,27 @@
 
 <script>
     const priceData = {
-        'R15': {
-            demontazh_rezi: { set: 800, single: 200 },
-            demontazh_runflat: { set: 850, single: 250 },
-            montazh_balans: { set: 1500, single: 400 },
-            kompleks_shinki: { set: 3000, single: 800 },
-            kompleks_runflat: { set: 3000, single: 750 }
-        },
-        'R16': {
-            demontazh_rezi: { set: 800, single: 200 },
-            demontazh_runflat: { set: 1500, single: 400 },
-            montazh_balans: { set: 2000, single: 500 },
-            kompleks_shinki: { set: 3500, single: 900 },
-            kompleks_runflat: { set: 4000, single: 1000 }
-        },
-        'R17': {
-            demontazh_rezi: { set: 1100, single: 300 },
-            demontazh_runflat: { set: 1750, single: 500 },
-            montazh_balans: { set: 2500, single: 700 },
-            kompleks_shinki: { set: 4000, single: 1000 },
-            kompleks_runflat: { set: 5000, single: 1250 }
-        },
-        'R18': {
-            demontazh_rezi: { set: 1200, single: 400 },
-            demontazh_runflat: { set: 2000, single: 500 },
-            montazh_balans: { set: 3000, single: 800 },
-            kompleks_shinki: { set: 4500, single: 1200 },
-            kompleks_runflat: { set: 5500, single: 1375 }
-        },
-        'R19': {
-            demontazh_rezi: { set: 1700, single: 450 },
-            demontazh_runflat: { set: 2500, single: 700 },
-            montazh_balans: { set: 3500, single: 900 },
-            kompleks_shinki: { set: 5000, single: 1300 },
-            kompleks_runflat: { set: 7000, single: 1750 }
-        },
-        'R20': {
-            demontazh_rezi: { set: 2000, single: 500 },
-            demontazh_runflat: { set: 3000, single: 750 },
-            montazh_balans: { set: 4000, single: 1000 },
-            kompleks_shinki: { set: 5500, single: 1400 },
-            kompleks_runflat: { set: 7500, single: 1875 }
-        },
-        'R21': {
-            demontazh_rezi: { set: 2000, single: 500 },
-            demontazh_runflat: { set: 3000, single: 750 },
-            montazh_balans: { set: 4500, single: 1200 },
-            kompleks_shinki: { set: 6000, single: 1500 },
-            kompleks_runflat: { set: 8000, single: 2000 }
-        },
-        'R22': {
-            demontazh_rezi: { set: 2500, single: 700 },
-            demontazh_runflat: { set: 3500, single: 900 },
-            montazh_balans: { set: 5000, single: 1300 },
-            kompleks_shinki: { set: 7000, single: 1750 },
-            kompleks_runflat: { set: 8500, single: 2125 }
-        },
-        'R23': {
-            demontazh_rezi: { set: 2500, single: 700 },
-            demontazh_runflat: { set: 3500, single: 900 },
-            montazh_balans: { set: 6000, single: 1500 },
-            kompleks_shinki: { set: 8000, single: 2000 },
-            kompleks_runflat: { set: 9500, single: 2375 }
-        }
+        'R15': { demontazh_rezi: { set: 800, single: 200 }, demontazh_runflat: { set: 850, single: 250 }, montazh_balans: { set: 1500, single: 400 }, kompleks_shinki: { set: 3000, single: 800 }, kompleks_runflat: { set: 3000, single: 750 } },
+        'R16': { demontazh_rezi: { set: 800, single: 200 }, demontazh_runflat: { set: 1500, single: 400 }, montazh_balans: { set: 2000, single: 500 }, kompleks_shinki: { set: 3500, single: 900 }, kompleks_runflat: { set: 4000, single: 1000 } },
+        'R17': { demontazh_rezi: { set: 1100, single: 300 }, demontazh_runflat: { set: 1750, single: 500 }, montazh_balans: { set: 2500, single: 700 }, kompleks_shinki: { set: 4000, single: 1000 }, kompleks_runflat: { set: 5000, single: 1250 } },
+        'R18': { demontazh_rezi: { set: 1200, single: 400 }, demontazh_runflat: { set: 2000, single: 500 }, montazh_balans: { set: 3000, single: 800 }, kompleks_shinki: { set: 4500, single: 1200 }, kompleks_runflat: { set: 5500, single: 1375 } },
+        'R19': { demontazh_rezi: { set: 1700, single: 450 }, demontazh_runflat: { set: 2500, single: 700 }, montazh_balans: { set: 3500, single: 900 }, kompleks_shinki: { set: 5000, single: 1300 }, kompleks_runflat: { set: 7000, single: 1750 } },
+        'R20': { demontazh_rezi: { set: 2000, single: 500 }, demontazh_runflat: { set: 3000, single: 750 }, montazh_balans: { set: 4000, single: 1000 }, kompleks_shinki: { set: 5500, single: 1400 }, kompleks_runflat: { set: 7500, single: 1875 } },
+        'R21': { demontazh_rezi: { set: 2000, single: 500 }, demontazh_runflat: { set: 3000, single: 750 }, montazh_balans: { set: 4500, single: 1200 }, kompleks_shinki: { set: 6000, single: 1500 }, kompleks_runflat: { set: 8000, single: 2000 } },
+        'R22': { demontazh_rezi: { set: 2500, single: 700 }, demontazh_runflat: { set: 3500, single: 900 }, montazh_balans: { set: 5000, single: 1300 }, kompleks_shinki: { set: 7000, single: 1750 }, kompleks_runflat: { set: 8500, single: 2125 } },
+        'R23': { demontazh_rezi: { set: 2500, single: 700 }, demontazh_runflat: { set: 3500, single: 900 }, montazh_balans: { set: 6000, single: 1500 }, kompleks_shinki: { set: 8000, single: 2000 }, kompleks_runflat: { set: 9500, single: 2375 } }
+    };
+
+    const paintPrices = {
+        'R15': { std: 17000, chrome: 23000 },
+        'R16': { std: 18000, chrome: 24000 },
+        'R17': { std: 19000, chrome: 25000 },
+        'R18': { std: 20000, chrome: 26000 },
+        'R19': { std: 22000, chrome: 29000 },
+        'R20': { std: 24000, chrome: 31000 },
+        'R21': { std: 28000, chrome: 36000 },
+        'R22': { std: 30000, chrome: 38000 },
+        'R23': { std: 30000, chrome: 38000 }
     };
 
     const flatPrices = {
@@ -399,6 +497,18 @@
 
     let selectedSize = 'R16';
     let selectedCarType = 'sedan';
+
+    // Вспомогательные функции для окончаний слов
+    const getWheelWord = (n) => {
+        if (n === 1) return 'диск';
+        if (n >= 2 && n <= 4) return 'диска';
+        return 'дисков';
+    };
+    const getSetWord = (n) => {
+        if (n === 1) return 'комплект';
+        if (n >= 2 && n <= 4) return 'комплекта';
+        return 'комплектов';
+    };
 
     const sizeGrid = document.getElementById('sizeGrid');
     Object.keys(priceData).forEach(size => {
@@ -417,14 +527,26 @@
         calculate();
     }
 
+    function toggleService(id) {
+        const body = document.getElementById(`body-${id}`);
+        const arrow = document.getElementById(`arrow-${id}`);
+        if (body.classList.contains('active')) {
+            body.classList.remove('active');
+            arrow.textContent = '▶';
+        } else {
+            body.classList.add('active');
+            arrow.textContent = '▼';
+        }
+    }
+
     function setCarType(type) {
         selectedCarType = type;
         document.querySelectorAll('.car-type-btn').forEach(btn => {
             btn.classList.toggle('active', btn.textContent.toLowerCase().includes(type === 'sedan' ? 'седан' : 'кроссовер'));
         });
         
-        document.getElementById('labelPerekidka').textContent = formatPrice(flatPrices.perekidka[type]) + ' ₽';
-        document.getElementById('labelVyveshivanie').textContent = formatPrice(flatPrices.vyveshivanie[type]) + ' ₽';
+        document.getElementById('perekidkaPriceText').textContent = formatPrice(flatPrices.perekidka[type]);
+        document.getElementById('vyveshivaniePriceText').textContent = formatPrice(flatPrices.vyveshivanie[type]);
         
         calculate();
     }
@@ -444,28 +566,200 @@
 
     function calculate() {
         const qty = parseInt(document.getElementById('wheelQty').value);
-        const workType = document.getElementById('workSelect').value;
         
-        let workCost = 0;
-        
-        if (workType !== 'none') {
+        let shinkaCost = 0;
+        let repairCost = 0;
+        let addonsCost = 0;
+
+        let breakdownHtml = '';
+
+        // 1. ШИНОМОНТАЖ
+        if (document.getElementById('useShinka').checked) {
+            const workType = document.getElementById('workSelect').value;
             const prices = priceData[selectedSize][workType];
             const setsOfFour = Math.floor(qty / 4);
             const remainingWheels = qty % 4;
-            workCost = (setsOfFour * prices.set) + (remainingWheels * prices.single);
+            shinkaCost = (setsOfFour * prices.set) + (remainingWheels * prices.single);
+
+            const workNames = {
+                kompleks_shinki: "Комплекс шинки (стандарт)",
+                kompleks_runflat: "Комплекс Runflat",
+                montazh_balans: "Монтаж / баланс",
+                demontazh_rezi: "Демонтаж резины",
+                demontazh_runflat: "Демонтаж Runflat"
+            };
+
+            let formulaText = '';
+            if (setsOfFour > 0 && remainingWheels > 0) {
+                formulaText = `${setsOfFour} компл. х ${formatPrice(prices.set)} ₽ + ${remainingWheels} шт. х ${formatPrice(prices.single)} ₽`;
+            } else if (setsOfFour > 0) {
+                formulaText = `${setsOfFour} компл. х ${formatPrice(prices.set)} ₽`;
+            } else {
+                formulaText = `${remainingWheels} шт. х ${formatPrice(prices.single)} ₽`;
+            }
+
+            breakdownHtml += `
+                <div class="detail-item">
+                    <span><strong>Шиномонтаж:</strong> ${workNames[workType]} (${selectedSize}, ${qty} шт.)<br><small style="color: var(--text-muted);">${formulaText}</small></span>
+                    <span>${formatPrice(shinkaCost)} ₽</span>
+                </div>
+            `;
         }
 
-        let addonsCost = 0;
+        // 2. ПОКРАСКА
+        if (document.getElementById('usePaint').checked) {
+            const paintType = document.getElementById('paintType').value;
+            const setPrice = paintPrices[selectedSize][paintType];
+            
+            const setsOfFour = Math.floor(qty / 4);
+            const remainder = qty % 4;
+            
+            let multiplier = setsOfFour;
+            let percentLabel = '';
+            let remainderCost = 0;
+
+            if (remainder === 1) { 
+                multiplier += 0.40; 
+                percentLabel = '40%'; 
+                remainderCost = Math.round(setPrice * 0.40);
+            } else if (remainder === 2) { 
+                multiplier += 0.60; 
+                percentLabel = '60%'; 
+                remainderCost = Math.round(setPrice * 0.60);
+            } else if (remainder === 3) { 
+                multiplier += 0.80; 
+                percentLabel = '80%'; 
+                remainderCost = Math.round(setPrice * 0.80);
+            }
+            
+            const currentPaintCost = Math.round(setPrice * multiplier);
+            repairCost += currentPaintCost;
+
+            const paintNames = {
+                std: "Порошковая покраска (стандарт)",
+                chrome: "Порошковая покраска (Алюмохром)"
+            };
+
+            let formulaText = '';
+            if (setsOfFour > 0 && remainder > 0) {
+                formulaText = `${setsOfFour} ${getSetWord(setsOfFour)} (${formatPrice(setPrice * setsOfFour)} ₽) + ${remainder} ${getWheelWord(remainder)} (${percentLabel} от стоимости комплекта = ${formatPrice(remainderCost)} ₽)`;
+            } else if (setsOfFour > 0) {
+                formulaText = `${setsOfFour} ${getSetWord(setsOfFour)} из 4 дисков`;
+            } else {
+                formulaText = `${remainder} ${getWheelWord(remainder)} (${percentLabel} от стоимости комплекта = ${formatPrice(remainderCost)} ₽)`;
+            }
+
+            breakdownHtml += `
+                <div class="detail-item">
+                    <span><strong>Покраска:</strong> ${paintNames[paintType]} (${selectedSize}, ${qty} шт.)<br><small style="color: var(--text-muted);">${formulaText}</small></span>
+                    <span>${formatPrice(currentPaintCost)} ₽</span>
+                </div>
+            `;
+        }
+
+        // 3. АЛМАЗНАЯ ПРОТОЧКА
+        if (document.getElementById('useProtochka').checked) {
+            const protType = document.getElementById('protochkaType').value;
+            const numericSize = parseInt(selectedSize.replace('R', ''));
+            let currentProtCost = 0;
+            
+            if (numericSize <= 18) {
+                currentProtCost = (protType === 'odnoshir') ? 11000 : 13000;
+            } else if (numericSize > 18 && numericSize <= 21) {
+                currentProtCost = (protType === 'odnoshir') ? 13000 : 15000;
+            } else { // R22 и R23
+                currentProtCost = (protType === 'odnoshir') ? 15000 : 18000;
+            }
+            repairCost += currentProtCost;
+
+            const protTypeNames = { odnoshir: "Одноширокие", raznoshir: "Разноширокие" };
+
+            breakdownHtml += `
+                <div class="detail-item">
+                    <span><strong>Проточка:</strong> Алмазная проточка (${protTypeNames[protType]}, ${selectedSize})</span>
+                    <span>${formatPrice(currentProtCost)} ₽</span>
+                </div>
+            `;
+        }
+
+        // 4. ПРАВКА ДИСКОВ
+        if (document.getElementById('usePravka').checked) {
+            const pravkaQty = parseInt(document.getElementById('pravkaQty').value) || 1;
+            const pravkaType = document.getElementById('pravkaType').value;
+            const numericSize = parseInt(selectedSize.replace('R', ''));
+            let singlePravkaPrice = 0;
+
+            if (numericSize <= 18) {
+                singlePravkaPrice = (pravkaType === 'lite' ? 2000 : 3000);
+            } else { // R19 и выше
+                singlePravkaPrice = (pravkaType === 'lite' ? 2500 : 4500);
+            }
+            
+            const currentPravkaCost = singlePravkaPrice * pravkaQty;
+            repairCost += currentPravkaCost;
+
+            const complexityNames = { lite: "Лайт", hard: "Сложная (Пиздец)" };
+
+            breakdownHtml += `
+                <div class="detail-item">
+                    <span><strong>Правка:</strong> ${complexityNames[pravkaType]} (${selectedSize})<br><small style="color: var(--text-muted);">${pravkaQty} шт. х ${formatPrice(singlePravkaPrice)} ₽</small></span>
+                    <span>${formatPrice(currentPravkaCost)} ₽</span>
+                </div>
+            `;
+        }
+
+        // 5. ДИМЕТ
+        if (document.getElementById('useDimet').checked) {
+            const cm = parseInt(document.getElementById('dimetLength').value) || 0;
+            const currentDimetCost = cm * 350;
+            repairCost += currentDimetCost;
+
+            breakdownHtml += `
+                <div class="detail-item">
+                    <span><strong>Димет:</strong> Локальное напыление металла<br><small style="color: var(--text-muted);">${cm} см х 350 ₽/см</small></span>
+                    <span>${formatPrice(currentDimetCost)} ₽</span>
+                </div>
+            `;
+        }
+
+        // 6. ДОПОЛНИТЕЛЬНЫЕ ОПЦИИ (Вывешивание, Перекидка)
+        const carTypeName = selectedCarType === 'sedan' ? 'Седан' : 'Кроссовер';
+        
         if (document.getElementById('chkPerekidka').checked) {
-            addonsCost += flatPrices.perekidka[selectedCarType];
+            const val = flatPrices.perekidka[selectedCarType];
+            addonsCost += val;
+            breakdownHtml += `
+                <div class="detail-item">
+                    <span><strong>Доп:</strong> Перекидка колёс (${carTypeName})</span>
+                    <span>${formatPrice(val)} ₽</span>
+                </div>
+            `;
         }
         if (document.getElementById('chkVyveshivanie').checked) {
-            addonsCost += flatPrices.vyveshivanie[selectedCarType];
+            const val = flatPrices.vyveshivanie[selectedCarType];
+            addonsCost += val;
+            breakdownHtml += `
+                <div class="detail-item">
+                    <span><strong>Доп:</strong> Вывешивание автомобиля (${carTypeName})</span>
+                    <span>${formatPrice(val)} ₽</span>
+                </div>
+            `;
         }
 
-        const totalCost = workCost + addonsCost;
+        const totalCost = shinkaCost + repairCost + addonsCost;
 
-        document.getElementById('resWork').textContent = formatPrice(workCost) + ' ₽';
+        // Показ/скрытие карточки чека-детализации
+        const receiptCard = document.getElementById('receiptCard');
+        if (breakdownHtml !== '') {
+            receiptCard.style.display = 'block';
+            document.getElementById('breakdownList').innerHTML = breakdownHtml;
+        } else {
+            receiptCard.style.display = 'none';
+        }
+
+        // Обновление интерфейса
+        document.getElementById('resShinka').textContent = formatPrice(shinkaCost) + ' ₽';
+        document.getElementById('resRepair').textContent = formatPrice(repairCost) + ' ₽';
         document.getElementById('resAddons').textContent = formatPrice(addonsCost) + ' ₽';
         document.getElementById('resTotal').textContent = formatPrice(totalCost) + ' ₽';
     }
